@@ -9,6 +9,8 @@ jobs:
       - uses: actions/checkout@v4
       - run: |
           for f in *.zip; do unzip -q -o "$f"; done
+      - run: sed -i '/cancelDiscovery/d' CmfBuds/app/src/main/java/com/cmf/buds/BudsClient.kt
+      - run: sed -i 's/Dispatchers.IO)/Dispatchers.IO + kotlinx.coroutines.CoroutineExceptionHandler { _, e -> log(e.toString()) })/' CmfBuds/app/src/main/java/com/cmf/buds/BudsClient.kt
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -20,3 +22,5 @@ jobs:
         working-directory: CmfBuds
       - uses: actions/upload-artifact@v4
         with:
+          name: CMF-Buds-apk
+          path: CmfBuds/app/build/outputs/apk/debug/app-debug.apk
